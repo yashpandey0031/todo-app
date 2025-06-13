@@ -1,38 +1,242 @@
+/* Main container */
 .App {
+  position: relative;
+  min-height: 90vh;
+  width: 100%;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Full-screen background image container */
+.background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  z-index: -3; /* moved deeper back */
+}
+
+/* Background image */
+.background-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1s ease-in-out;
+  animation: fadeImage 1s ease-in-out;
+}
+
+/* Blur overlay above the image */
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: -2; /* above the image, below content */
+}
+
+/* Fade in background image */
+@keyframes fadeImage {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Centered content container */
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 95vh;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1; /* ensure it's above background + blur */
+}
+
+/* To-do card */
+.todo-base {
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 25px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 500px;
+  backdrop-filter: blur(12px);
+}
+
+/* Title */
+.title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+/* Task list */
+.task-list {
+  flex: 1;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding-right: 6px;
+}
+
+.task-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #222;
+  background-color: rgba(144, 238, 144, 0.75);
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.task-item input[type="checkbox"] {
+  transform: scale(1.2);
+  accent-color: #4caf50;
+}
+
+.task-item span {
+  flex: 1;
+  transition: all 0.3s ease;
+  word-break: break-word;
+}
+
+.task-item:hover {
+  background-color: rgba(240, 255, 240, 0.9);
+  transform: translateX(3px);
+}
+
+.add-task {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.add-task button {
+  padding: 10px 24px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.add-task button:hover {
+  background-color: #45a049;
+  transform: scale(1.03);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 3;
+}
+
+.pop-up {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  z-index: 4;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
+  gap: 15px;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  animation: popupFade 0.4s ease forwards;
+}
+
+.pop-up input {
+  padding: 10px 12px;
+  width: 240px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.pop-up button {
+  padding: 10px 20px;
+  background-color: #4caf50;
   color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.App-link {
-  color: #61dafb;
+.pop-up button:hover {
+  background-color: #3e8e41;
 }
 
-@keyframes App-logo-spin {
+.task-item input,
+.task-item span,
+.add-task button,
+.pop-up input,
+.pop-up button {
+  transition: all 0.3s ease;
+}
+
+@keyframes fadeIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(10px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
+}
+
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.pop-up input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
 }
